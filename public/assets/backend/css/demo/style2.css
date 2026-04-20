@@ -1,0 +1,200 @@
+/* ===============================
+   DATATABLES GLOBAL PAGINATION
+   =============================== */
+
+/* Center pagination */
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Number circle buttons */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    border-radius: 50% !important;
+    width: 34px !important;
+    height: 34px !important;
+    padding: 0 !important;
+    margin: 0 5px !important;
+    line-height: 34px !important;
+    text-align: center !important;
+    background: #4f46e5 !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 500 !important;
+    transition: 0.2s ease !important;
+}
+
+/* Active page */
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #4f46e5 !important;
+    color: #ffffff !important;
+}
+
+/* Hover effect */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #4338ca !important;
+    color: #ffffff !important;
+}
+
+/* Previous / Next / First / Last buttons */
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next,
+.dataTables_wrapper .dataTables_paginate .paginate_button.first,
+.dataTables_wrapper .dataTables_paginate .paginate_button.last {
+    border-radius: 8px !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 6px 12px !important;
+    background: #4f46e5 !important;
+    color: #ffffff !important;
+    margin: 0 5px !important;
+    line-height: normal !important;
+}
+
+/* Hover for arrows */
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.next:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.first:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.last:hover {
+    background: #4338ca !important;
+    color: #ffffff !important;
+}
+
+/* Disabled buttons */
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    color: #ffffff !important;
+}
+
+/* asside bar css */
+.mdc-drawer-submenu-wrapper {
+    display: none;
+    margin-left: 10px;
+}
+
+.mdc-drawer-item.open .mdc-drawer-arrow {
+    transform: rotate(90deg);
+    transition: 0.2s ease;
+}
+
+.mdc-drawer-submenu-wrapper.submenu-open {
+    display: block !important;
+}
+
+/* FORCE submenu text visible */
+.mdc-drawer-submenu .mdc-drawer-link {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    background: transparent !important;
+}
+
+/* Hover */
+.mdc-drawer-submenu .mdc-drawer-link:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* REAL active page */
+.mdc-drawer-submenu .mdc-drawer-link.is-current {
+    background: rgba(255, 255, 255, 0.25) !important;
+    font-weight: 600;
+}
+
+/* ================================
+   SELECT2 GLOBAL FIX (BOOTSTRAP 5)
+================================ */
+
+/* SINGLE SELECT */
+.select2-container .select2-selection--single {
+    height: 36px !important;
+    display: flex;
+    align-items: center;
+    padding: 2px 5px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.select2-selection--single .select2-selection__rendered {
+    line-height: normal !important;
+    padding-left: 0 !important;
+}
+
+.select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+    right: 8px;
+}
+
+/* MULTIPLE SELECT (FIXED PROPERLY) */
+.select2-container .select2-selection--multiple {
+    min-height: 36px !important;
+    height: auto !important;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* IMPORTANT */
+    padding: 2px 5px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+/* TAGS (SELECTED ITEMS) */
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice {
+    background-color: #0d6efd; /* Bootstrap primary */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin: 2px 5px 2px 0;
+    display: flex;
+    align-items: center;
+}
+
+/* REMOVE BUTTON (X) */
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice__remove {
+    color: #fff;
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice__remove:hover {
+    color: #dc3545; /* red */
+}
+
+/* SEARCH INPUT INSIDE MULTI SELECT */
+.select2-container--default
+    .select2-selection--multiple
+    .select2-search--inline
+    .select2-search__field {
+    margin-top: 4px;
+    height: 24px;
+}
+
+/* FOCUS STATE */
+.select2-container--default.select2-container--focus .select2-selection {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* DROPDOWN */
+.select2-dropdown {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+/* DROPDOWN OPTIONS */
+.select2-results__option {
+    padding: 8px 10px;
+}
+
+/* SELECTED OPTION IN DROPDOWN */
+.select2-results__option--highlighted {
+    background-color: #0d6efd !important;
+    color: white;
+}

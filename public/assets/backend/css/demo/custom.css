@@ -1,0 +1,32 @@
+/* bootstrap default ko chup karao */
+.modal.fade .modal-dialog {
+    transition: none;
+}
+
+/* start: kaafi andar se aata hua */
+.modal.pop-out .modal-dialog {
+    transform: scale(0.7);
+    opacity: 0;
+    transition:
+        transform 1.2s cubic-bezier(0.2, 0.9, 0.3, 1),
+        opacity 1.2s ease;
+}
+
+/* fully visible */
+.modal.pop-out.show .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* GLOBAL SELECT2 WIDTH FIX */
+.select2-container .select2-selection--single {
+    height: 36px !important;
+}
+
+.select2-selection__rendered {
+    line-height: 36px !important;
+}
+
+.select2-selection__arrow {
+    height: 36px !important;
+}
