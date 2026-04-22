@@ -18,7 +18,7 @@
             </div>
 
             <div class="d-flex gap-2 mt-2 mt-md-0">
-                <a href="#" class="mdc-button mdc-button--unelevated">
+                <a href="{{ route('expenses.create') }}" class="mdc-button mdc-button--unelevated">
                     <i class="bi bi-plus"></i> Add Expenses
                 </a>
             </div>
