@@ -307,6 +307,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('expenses')->group(function () {
         // invoice sale 
         Route::get('/index', [ExpensesController::class, 'index'])->name('expenses.index');
+        Route::get('/list', [ExpensesController::class, 'list'])->name('expenses.list');
         Route::get('/create', [ExpensesController::class, 'create'])->name('expenses.create');
         Route::post('/store', [ExpensesController::class, 'store'])->name('expenses.store');
     });

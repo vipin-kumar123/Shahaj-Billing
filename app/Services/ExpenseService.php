@@ -21,6 +21,14 @@ class ExpenseService
             ->get();
     }
 
+    public function getAll($userId)
+    {
+        return Expenses::with('category')
+            ->where('user_id', $userId)
+            ->latest();
+    }
+
+
     public function createExpense(array $data)
     {
         DB::transaction(function () use ($data) {

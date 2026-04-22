@@ -9,7 +9,7 @@ class Expenses extends Model
     protected $fillable = [
         'expense_date',
         'category_id',
-        'reference_no',
+        'expense_no',
         'paid_to',
         'total_amount',
         'paid_amount',
@@ -25,10 +25,10 @@ class Expenses extends Model
         parent::boot();
 
         static::creating(function ($expense) {
-            if (empty($expense->reference_no)) {
+            if (empty($expense->expense_no)) {
                 $lastId = Expenses::max('id') ?? 0;
                 $nextId = $lastId + 1;
-                $expense->reference_no = 'EXP' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
+                $expense->expense_no = 'EXP' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
             }
         });
     }

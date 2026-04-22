@@ -97,7 +97,7 @@ $(document).on("submit", "#expenseForm", async function (e) {
             return;
         }
 
-        console.log(res);
+        //console.log(res);
 
         if (res.success) {
             Swal.fire({
@@ -135,5 +135,50 @@ function showErrors(errors) {
         icon: "error",
         title: "Please fix the errors",
         html: `<ul style="text-align:center;">${errorList}</ul>`,
+    });
+}
+
+// display data table
+if ($("#expenseTable").length) {
+    $("#expenseTable").DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: window.EXPENSE_LIST_ROUTE,
+
+        pagingType: "full_numbers",
+
+        language: {
+            paginate: {
+                first: "«",
+                previous: "‹",
+                next: "›",
+                last: "»",
+            },
+        },
+
+        ordering: false,
+
+        columnDefs: [
+            {
+                targets: "_all",
+                className: "text-start",
+            },
+        ],
+
+        columns: [
+            { data: "expense_date", name: "expense_date" },
+            { data: "expense_no", name: "expense_no" },
+            { data: "category", name: "category" },
+            { data: "total_amount", name: "total_amount" },
+            { data: "paid_amount", name: "paid_amount" },
+            { data: "due_amount", name: "due_amount" },
+            { data: "payment_status", name: "payment_status" },
+            {
+                data: "action",
+                name: "action",
+                orderable: false,
+                searchable: false,
+            },
+        ],
     });
 }

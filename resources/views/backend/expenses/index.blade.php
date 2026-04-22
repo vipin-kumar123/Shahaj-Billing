@@ -29,11 +29,15 @@
         <div class="card border-0 shadow-sm">
             <div class="card-body p-2">
 
-                <table id="categoriesTable" class="table table-hover mb-0" style="width:100%; table-layout: fixed;">
+                <table id="expenseTable" class="table table-hover mb-0" style="width:100%; table-layout: fixed;">
                     <thead class="bg-light">
                         <tr>
-                            <th>Name</th>
-                            <th>Slug</th>
+                            <th>Expense Date</th>
+                            <th>Expense No.</th>
+                            <th>Category</th>
+                            <th>Total Amount</th>
+                            <th>Paid Amount</th>
+                            <th>Due Amount</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -47,14 +51,13 @@
             </div>
         </div>
     </div>
-    @include('backend.category.modal')
 @endsection
 
 
 @push('footer-script')
     <script>
-        window.CATEGORY_INDEX_ROUTE = "{{ route('categories.index') }}";
+        window.EXPENSE_LIST_ROUTE = "{{ route('expenses.list') }}";
     </script>
 
-    <script src="{{ asset('assets/backend/js/category.js') }}"></script>
+    <script src="{{ asset('assets/backend/js/expense.js') }}"></script>
 @endpush
