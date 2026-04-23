@@ -1,16 +1,30 @@
-let rowIndex = 0;
+//Dynamic index (edit + add)
+let rowIndex = $(".amount").length;
+
+//Page load pe calculation force
+$(document).ready(function () {
+    calculateTotal();
+});
+
+// Add Row
+$("#addRow").click(function () {
+    addRow();
+});
 
 function addRow() {
     let row = `
     <tr>
         <td>
-            <input type="text" name="items[${rowIndex}][description]" class="form-control" placeholder="Enter description">
+            <input type="text" name="items[${rowIndex}][description]" 
+                class="form-control" placeholder="Enter description">
         </td>
         <td>
-            <input type="number" name="items[${rowIndex}][amount]" class="form-control amount" step="0.01">
+            <input type="number" name="items[${rowIndex}][amount]" 
+                class="form-control amount" step="0.01">
         </td>
         <td>
-            <input type="number" name="items[${rowIndex}][tax_amount]" class="form-control tax" step="0.01">
+            <input type="number" name="items[${rowIndex}][tax_amount]" 
+                class="form-control tax" step="0.01">
         </td>
         <td class="text-center">
             <button type="button" class="btn btn-danger btn-sm removeRow">X</button>
@@ -18,29 +32,18 @@ function addRow() {
     </tr>`;
 
     $("#itemsTable tbody").append(row);
+
     rowIndex++;
+
+    calculateTotal();
 }
 
-$(document).ready(function () {
-    addRow();
-});
-// Add Row
-$("#addRow").click(function () {
-    addRow();
-});
-
-// Remove Row
 $(document).on("click", ".removeRow", function () {
     $(this).closest("tr").remove();
     calculateTotal();
 });
 
-// Calculate Total
-$(document).on("keyup change", ".amount", function () {
-    calculateTotal();
-});
-
-$(document).on("keyup change", ".tax", function () {
+$(document).on("keyup change", ".amount, .tax", function () {
     calculateTotal();
 });
 
@@ -50,7 +53,6 @@ $("#paid_amount").on("keyup change", function () {
 
 function calculateTotal() {
     let total = 0;
-    let dueAmount = 0;
 
     $(".amount").each(function () {
         total += parseFloat($(this).val()) || 0;
@@ -60,15 +62,16 @@ function calculateTotal() {
         total += parseFloat($(this).val()) || 0;
     });
 
+    total = parseFloat(total.toFixed(2));
+
     $("#total_amount").val(total);
 
     let paid = parseFloat($("#paid_amount").val()) || 0;
 
-    dueAmount = total - paid;
+    let due = total - paid;
 
-    $("#due_amount").val(dueAmount);
+    $("#due_amount").val(due.toFixed(2));
 }
-
 /*********************store expense******************************************/
 $(document).on("submit", "#expenseForm", async function (e) {
     e.preventDefault();
@@ -182,3 +185,61 @@ if ($("#expenseTable").length) {
         ],
     });
 }
+
+/*********************update expense******************************************/
+$(document).on("submit", "#expenseUpdate", async function (e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    let btn = $("#editExpenseBtn");
+    let old = btn.html();
+
+    btn.prop("disabled", true).html(
+        '<span class="spinner-border spinner-border-sm me-2"></span> Updating...',
+    );
+
+    try {
+        const response = await fetch(window.EXPENSE_UPDATE_ROUTE, {
+            method: "POST",
+            body: formData,
+        });
+
+        const text = await response.text();
+        //console.log("RAW RESPONSE:", text);
+
+        let res = {};
+        if (text) {
+            res = JSON.parse(text);
+        } else {
+            throw new Error("Empty response from server");
+        }
+
+        if (response.status === 422) {
+            showErrors(res.errors);
+            return;
+        }
+
+        if (res.success) {
+            Swal.fire({
+                icon: "success",
+                title: res.message,
+                timer: 2000,
+                showConfirmButton: false,
+            });
+            setTimeout(() => {
+                window.location.href = window.EXPENSE_INDEX;
+            }, 2000);
+        }
+    } catch (err) {
+        console.error(err);
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: err.message,
+        });
+    } finally {
+        btn.prop("disabled", false).html(old);
+    }
+});
+/*********************update expense******************************************/

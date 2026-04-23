@@ -66,7 +66,7 @@ class ExpensesController extends Controller
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow">
                         <li>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="' . route('expenses.edit', $row->id) . '">
                                 <i class="bi bi-pencil-square me-2"></i> Edit
                             </a>
                         </li>
@@ -89,11 +89,6 @@ class ExpensesController extends Controller
 
     public function store(Request $request)
     {
-
-        // return response()->json([
-        //     'data' =>  $request->all(),
-        // ]);
-        // exit;
         $validator = Validator::make($request->all(), [
             'expense_date'   => 'required|date',
             'payment_method' => 'required|string|max:50',
@@ -105,12 +100,11 @@ class ExpensesController extends Controller
 
             'items' => 'required|array|min:1',
             'items.*.amount' => 'required|numeric|min:0',
+            'items.*.tax_amount' => 'required|numeric|min:0',
             'items.*.description' => 'nullable|string',
 
             'notes' => 'nullable|string',
         ]);
-
-        $this->expenseService->createExpense($validator->validate());
 
         if ($validator->fails()) {
             return response()->json([
@@ -119,9 +113,75 @@ class ExpensesController extends Controller
             ], 422);
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Expense added successfully'
+        try {
+
+            $this->expenseService->createExpense($validator->validated());
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Expense added successfully'
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function edit($id)
+    {
+        $expense = $this->expenseService->findById($id);
+        if (!$expense) {
+            abort(404, 'Expense not found');
+        }
+        $excats = $this->expenseService->getAllExpensCategory(auth()->id());
+
+        return view('backend.expenses.edit', compact('excats', 'expense'));
+    }
+
+    public function update(Request $request, $id)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'expense_date'   => 'required|date',
+            'payment_method' => 'required|string|max:50',
+            'category_id'    => 'required|exists:expense_categories,id',
+            'paid_to'        => 'nullable|string|max:255',
+            'paid_amount'    => 'nullable|numeric|min:0',
+            'total_amount'   => 'required|numeric|min:0',
+            'reference_no'   => 'nullable',
+
+            'items' => 'required|array|min:1',
+            'items.*.amount' => 'required|numeric|min:0',
+            'items.*.tax_amount' => 'required|numeric|min:0',
+            'items.*.description' => 'nullable|string',
+
+            'notes' => 'nullable|string',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $data = $validator->validate();
+            $this->expenseService->expenseUpdate($data, $id);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Expense updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

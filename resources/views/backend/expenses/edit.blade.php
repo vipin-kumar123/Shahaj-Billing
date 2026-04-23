@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
 @section('title')
-    Billing Software | Add Expenses
+    Billing Software | Edit Expenses
 @endsection
 
 
@@ -15,7 +15,7 @@
                 <span>Expenses</span>
                 <i class="bi bi-chevron-right mx-2"></i>
 
-                <span class="fw-semibold text-dark">Create Expenses</span>
+                <span class="fw-semibold text-dark">Edit Expenses</span>
             </div>
 
             <!-- RIGHT -->
@@ -33,14 +33,15 @@
         <div class="card border-0 shadow-sm">
             <div class="card-body px-5 py-4">
 
-                <form id="expenseForm">
+                <form id="expenseUpdate">
                     @csrf
                     <!-- Row 1 -->
                     <div class="row">
                         <div class="col-md-3 mb-3">
                             <label class="mb-1">Date*</label>
                             <input type="text" name="expense_date" class="form-control datepicker"
-                                value="{{ date('d-m-Y') }}" required>
+                                value="{{ $expense ? \Carbon\Carbon::parse($expense->expense_date)->format('d-m-Y') : date('d-m-Y') }}"
+                                required>
                         </div>
 
                         <div class="col-md-3 mb-3">
@@ -48,22 +49,28 @@
                             <select name="category_id" class="form-control select2">
                                 <option value="">Select Category</option>
                                 @foreach ($excats ?? [] as $cat)
-                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    <option value="{{ $cat->id }}"
+                                        {{ $expense->category_id == $cat->id ? 'selected' : '' }}>{{ $cat->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="col-md-3 mb-3">
                             <label class="mb-1">Paid To</label>
-                            <input type="text" name="paid_to" class="form-control" placeholder="Vendor / Person">
+                            <input type="text" name="paid_to" class="form-control" value="{{ $expense->paid_to }}"
+                                placeholder="Vendor / Person">
                         </div>
 
                         <div class="col-md-3 mb-3">
                             <label class="mb-1">Payment Method</label>
                             <select name="payment_method" class="form-control select2">
-                                <option value="cash">Cash</option>
-                                <option value="bank">Bank</option>
-                                <option value="upi">UPI</option>
+                                <option value="cash" {{ $expense->payment_method == 'cash' ? 'selected' : '' }}>Cash
+                                </option>
+                                <option value="bank" {{ $expense->payment_method == 'bank' ? 'selected' : '' }}>Bank
+                                </option>
+                                <option value="upi" {{ $expense->payment_method == 'upi' ? 'selected' : '' }}>UPI
+                                </option>
                             </select>
                         </div>
 
@@ -81,23 +88,27 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <input type="text" name="items[0][description]" class="form-control"
-                                            placeholder="Enter description">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[0][amount]" class="form-control amount"
-                                            step="0.01">
-                                    </td>
-                                    <td>
-                                        <input type="number" name="items[0][tax_amount]" class="form-control tax"
-                                            step="0.01">
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-danger btn-sm removeRow">X</button>
-                                    </td>
-                                </tr>
+                                @foreach ($expense->items ?? [] as $key => $value)
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="items[{{ $key }}][description]"
+                                                value="{{ $value->description }}" class="form-control"
+                                                placeholder="Enter description">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[{{ $key }}][amount]"
+                                                value="{{ $value->amount }}" class="form-control amount" step="0.01">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="items[{{ $key }}][tax_amount]"
+                                                value="{{ $value->tax_amount }}" class="form-control tax" step="0.01">
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-danger btn-sm removeRow">X</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -111,22 +122,27 @@
 
                         <div class="col-md-3 mb-3">
                             <label>Total Amount</label>
-                            <input type="number" id="total_amount" name="total_amount" class="form-control" readonly>
+                            <input type="number" id="total_amount" name="total_amount"
+                                value="{{ $expense->total_amount }}" class="form-control" readonly>
                         </div>
 
                         <div class="col-md-3 mb-3">
                             <label>Paid Amount</label>
-                            <input type="number" name="paid_amount" id="paid_amount" class="form-control">
+                            <input type="number" name="paid_amount" id="paid_amount" value="{{ $expense->paid_amount }}"
+                                class="form-control">
                         </div>
 
                         <div class="col-md-3 mb-3">
                             <label>Due Amount</label>
-                            <input type="number" name="due_amount" id="due_amount" class="form-control" readonly>
+                            <input type="number" name="due_amount" id="due_amount" value="{{ $expense->due_amount }}"
+                                data-old="{{ $expense->due_amount }}" class="form-control" readonly>
+
                         </div>
 
                         <div class="col-md-3 mb-3">
                             <label>Payment Reference No</label>
-                            <input type="text" name="reference_no" class="form-control">
+                            <input type="text" name="reference_no"
+                                value="{{ $expense->payments->first()?->reference_no }} " class="form-control">
                         </div>
 
                     </div>
@@ -139,7 +155,7 @@
 
                     <!-- Submit -->
                     <div class="text-end">
-                        <button id="expenseBtn" class="mdc-button mdc-button--success">
+                        <button id="editExpenseBtn" class="mdc-button mdc-button--success">
                             Save Expense
                         </button>
                     </div>
@@ -156,7 +172,7 @@
 @push('footer-script')
     <script>
         window.EXPENSE_INDEX = "{{ route('expenses.index') }}";
-        window.EXPENSE_STORE = "{{ route('expenses.store') }}";
+        window.EXPENSE_UPDATE_ROUTE = "{{ route('expenses.update', $expense->id) }}";
     </script>
 
     <script src="{{ asset('assets/backend/js/expense.js') }}"></script>

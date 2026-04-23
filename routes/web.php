@@ -310,6 +310,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/list', [ExpensesController::class, 'list'])->name('expenses.list');
         Route::get('/create', [ExpensesController::class, 'create'])->name('expenses.create');
         Route::post('/store', [ExpensesController::class, 'store'])->name('expenses.store');
+        Route::get('/edit/{id}', [ExpensesController::class, 'edit'])->name('expenses.edit');
+        Route::post('/edit/{id}', [ExpensesController::class, 'update'])->name('expenses.update');
     });
     /*************************REPORTS CONTROLLER******************************/
 
